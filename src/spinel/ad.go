@@ -7,7 +7,7 @@ type ADConnection struct {
 }
 
 func (adc *ADConnection) Authenticate(user string, pass string) bool {
-	status, err := auth.Authenticate(adc.config, user, pass)
+	status, err := auth.Authenticate(&adc.Config, user, pass)
 	if err != nil || !status {
 		return false
 	} else {
