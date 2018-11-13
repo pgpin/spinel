@@ -6,7 +6,7 @@ import "crypto/sha256"
 type Token struct {
 	Permissions string `json:"p"`
 	Checksum    string `json:"c"`
-	Expires     int32 `json:"e"`
+	Expires     int64 `json:"e"`
 }
 
 func (tok *Token) CalculateChecksum(secret string) {

@@ -4,6 +4,7 @@ import "github.com/gin-gonic/gin"
 import "spinel"
 import "encoding/json"
 import "io/ioutil"
+import "time"
 
 func main() {
 	yamlstr, err := ioutil.ReadFile("example-config.yaml")
@@ -42,9 +43,14 @@ func main() {
 
 		//
 		// allow request if the bearer token is valid
+		// and the token has not expired
 		//
 		if token.Validate(config.Secret) {
-			c.AbortWithStatus(200)
+			if time.Now().Unix() > token.Expires{
+				c.AbortWithStatus(401)
+			}else{
+				c.AbortWithStatus(200)
+			}
 			return
 		}
 
