@@ -41,10 +41,10 @@ func main() {
 		json.Unmarshal([]byte(cookie.String()), &token)
 
 		//
-		// deny request is the bearer token is not valid
+		// allow request if the bearer token is valid
 		//
-		if !token.Validate(config.Secret) {
-			c.AbortWithStatus(401)
+		if token.Validate(config.Secret) {
+			c.AbortWithStatus(200)
 			return
 		}
 
