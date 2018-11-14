@@ -6,6 +6,7 @@ func TestParseYamlConfig(t *testing.T) {
 	yamlstr := `
 ---
 secret: foobar
+listen: 127.0.0.1:9999
 ad:
   host: hostname
   port: 123
@@ -26,5 +27,8 @@ cidrs:
 	}
 	if config.Cidrs[0] != "123.123.123.123/32" {
 		t.Error("configuration could not read cidrs")
+	}
+	if config.Listen != "127.0.0.1:9999" {
+		t.Error("configuration could not read listen")
 	}
 }

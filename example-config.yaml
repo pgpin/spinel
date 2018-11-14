@@ -1,4 +1,5 @@
 secret: GFE7py2bavDyMvtgOGR/Jm4H3BcoxSDcboNRgZ3i8NI= 
+listen: localhost:9999
 ad:
   host: localhost
   port: 389

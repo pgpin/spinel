@@ -61,5 +61,5 @@ func main() {
 		return
 	})
 	r.GET("/_spinel_login", func(c *gin.Context) { c.JSON(200, gin.H{"foo": "bar"}) })
-	r.Run()
+	r.Run(config.Listen)
 }

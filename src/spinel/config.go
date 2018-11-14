@@ -9,6 +9,7 @@ type ConfigAd struct {
 }
 
 type Config struct {
+	Listen string
 	Secret string
 	Ad     ConfigAd
 	Cidrs  []string
