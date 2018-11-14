@@ -8,15 +8,16 @@ install-depends:
 
 test-token:
 	$(gotest) src/spinel/token.go src/spinel/token_test.go
+
 test-cidr:
 	$(gotest) src/spinel/cidr.go src/spinel/cidr_test.go
+
 test-config:
 	$(gotest) src/spinel/config.go src/spinel/config_test.go
 
 spinel:
-	#$(gobuild) -o bin/spinel src/spinel/cidr.go src/spinel/token.go src/main.go
 	$(gobuild) -o bin/spinel src/main.go
 
-test: test-token test-cidr
+test: test-token test-cidr test-config
 all: install-depends spinel
 
