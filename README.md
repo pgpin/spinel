@@ -1,7 +1,9 @@
-# Spinel - Secure access to your organisation's internal web resources
+# Spinel - Secure access to internal websites
 
 ## Summary
-Spinel (spi·nelle) is a small, fast, and secure authentication handler for Nginx that allows your organization to securely serve internal web applications over the public internet without requiring a VPN (Virtual Private Network) connection or other secure tunneling strategies. It is very **fast** (typically adding less than 30 microseconds to a request), **simple** to setup with existing Nginx reverse proxies (requiring no special modules or compilation), and **secure** with tamper-proof sha256 checksums. Authentication rules can be setup to allow whitelisted ip ranges (specified as CIDR block) or require user login to an Active Directory domain.
+Spinel (spi·nelle) is a small, fast, and secure authentication handler for Nginx that allows your organization to securely serve internal web applications over the public internet without requiring a VPN (Virtual Private Network) connection or other secure tunneling strategies.
+
+It is very **fast** (typically adding less than 30 microseconds to a request), **simple** to setup with existing Nginx reverse proxies (requiring no special modules or compilation), and **secure** with tamper-proof sha256 checksums. Authentication rules can be setup to allow whitelisted ip ranges (specified as CIDR block) or require user login to an Active Directory domain.
 
 ## Status
 Not quite existing yet, almost!
