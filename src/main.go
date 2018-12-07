@@ -8,15 +8,21 @@ import "time"
 
 func main() {
 	yamlstr, err := ioutil.ReadFile("example-config.yaml")
-  if err != nil{
+	if err != nil {
 		panic(err)
 	}
-	config, _ := spinel.ParseYamlConfiguration(&yamlstr)
+
 	r := gin.Default()
+	r.Use(gin.Recovery())
+//	gin.DisableConsoleColor()
+//	f, _ := os.Create("spinel.log")
+//	gin.DefaultWriter = io.MultiWriter(f)
+
+	config, _ := spinel.ParseYamlConfiguration(&yamlstr)
 	cidrs := spinel.CidrsParse(config.Cidrs)
 
 	//
-	// _spinel_auth_check is a route that gets called by Nginx 
+	// _spinel_auth_check is a route that gets called by Nginx
 	// to determine if a request is authenticated. This route should
 	// return no content. If the request is allowed this route should
 	// return an HTTP 200. If the request is not allowed then it should
@@ -25,9 +31,9 @@ func main() {
 	r.GET("/_spinel_auth_check", func(c *gin.Context) {
 		var token spinel.Token
 		//
-		// allow request if client ip is in configured whitelists 
+		// allow request if client ip is in configured whitelists
 		//
-		if  spinel.CidrsContains(&cidrs, c.ClientIP()) {
+		if spinel.CidrsContains(&cidrs, c.ClientIP()) {
 			c.AbortWithStatus(200)
 			return
 		}
@@ -46,20 +52,24 @@ func main() {
 		// and the token has not expired
 		//
 		if token.Validate(config.Secret) {
-			if time.Now().Unix() > token.Expires{
+			if time.Now().Unix() > token.Expires {
 				c.AbortWithStatus(401)
-			}else{
+			} else {
 				c.AbortWithStatus(200)
 			}
 			return
 		}
 
 		//
-		// default deny 
+		// default deny
 		//
 		c.AbortWithStatus(401)
 		return
 	})
-	r.GET("/_spinel_login", func(c *gin.Context) { c.JSON(200, gin.H{"foo": "bar"}) })
+	r.LoadHTMLGlob("tmpl/*")
+	r.GET("/_spinel_login", func(c *gin.Context) {
+		c.HTML(200, "login.tmpl", gin.H{"url": c.Query("url")})
+	})
+	r.Static("/_spinel_assets", "./assets") 
 	r.Run(config.Listen)
 }
