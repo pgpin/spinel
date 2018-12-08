@@ -2,10 +2,10 @@ gobuild = CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-w -extldf
 gotest = go test 
 
 install-depends:
-	go get -u gopkg.in/yaml.v2
-	go get -u gopkg.in/korylprince/go-ad-auth.v2
-	go get -u github.com/gin-gonic/gin
-	go get -u github.com/jbmcgill/go-throttle
+	go get gopkg.in/yaml.v2
+	go get gopkg.in/korylprince/go-ad-auth.v2
+	go get github.com/gin-gonic/gin
+	go get github.com/jbmcgill/go-throttle
 
 test-token:
 	$(gotest) src/spinel/token.go src/spinel/token_test.go
@@ -20,5 +20,6 @@ spinel:
 	$(gobuild) -o bin/spinel src/main.go
 
 test: test-token test-cidr test-config
+
 all: install-depends spinel
 

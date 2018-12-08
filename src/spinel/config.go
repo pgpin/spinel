@@ -5,7 +5,8 @@ import "gopkg.in/yaml.v2"
 type ConfigAd struct {
 	Host string
 	Port int
-	Dsn  string
+	Dn  string
+	MaxRequestsPerSecond int
 }
 
 type Config struct {
