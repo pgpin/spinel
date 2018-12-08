@@ -14,9 +14,9 @@ func main() {
 
 	r := gin.Default()
 	r.Use(gin.Recovery())
-//	gin.DisableConsoleColor()
-//	f, _ := os.Create("spinel.log")
-//	gin.DefaultWriter = io.MultiWriter(f)
+	//	gin.DisableConsoleColor()
+	//	f, _ := os.Create("spinel.log")
+	//	gin.DefaultWriter = io.MultiWriter(f)
 
 	config, _ := spinel.ParseYamlConfiguration(&yamlstr)
 	cidrs := spinel.CidrsParse(config.Cidrs)
@@ -70,6 +70,6 @@ func main() {
 	r.GET("/_spinel_login", func(c *gin.Context) {
 		c.HTML(200, "login.tmpl", gin.H{"url": c.Query("url")})
 	})
-	r.Static("/_spinel_assets", "./assets") 
+	r.Static("/_spinel_assets", "./assets")
 	r.Run(config.Listen)
 }

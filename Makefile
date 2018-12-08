@@ -5,6 +5,7 @@ install-depends:
 	go get -u gopkg.in/yaml.v2
 	go get -u gopkg.in/korylprince/go-ad-auth.v2
 	go get -u github.com/gin-gonic/gin
+	go get -u github.com/jbmcgill/go-throttle
 
 test-token:
 	$(gotest) src/spinel/token.go src/spinel/token_test.go
