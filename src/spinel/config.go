@@ -9,11 +9,16 @@ type ConfigAd struct {
 	MaxRequestsPerSecond int
 }
 
+type Html struct{
+  LoginTitle string
+}
+
 type Config struct {
 	Listen string
 	Secret string
 	Ad     ConfigAd
 	Cidrs  []string
+	Html Html
 }
 
 func ParseYamlConfiguration(yamlstr *[]byte) (*Config, error) {

@@ -1,1 +1,108 @@
-Hello world! {{ .url }}
+<html>
+<head>
+ <title>Login required for {{ .url }}</title>
+ <style type="text/css">
+ body{
+   font-family: helvetica, sans-serif;
+   margin: 0px;
+ }
+ input[type=text], input[type=password], input[type=submit]{
+  margin-top: 15px;
+  border-radius: 10px;
+  border-color: #ddd;
+  border-width: 3px;
+  padding: 7px;
+  height: 50px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
+  background: -moz-linear-gradient(top, #fff, #eee);
+ }
+ input[type=submit]{
+   height: 35px;
+ }
+ input[type=checkbox]{
+   height: 20px;
+   width: 20px;
+   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
+   background: -moz-linear-gradient(top, #fff, #eee);
+   vertical-align: middle;
+ }
+ li{
+  list-style-type: none;
+ }
+ #loginTitle{
+   font-size: 14pt;
+   font-weight: bold;
+   margin-top: 25px;
+ }
+ #safety{
+   font-size: 14pt;
+   font-weight: bold;
+ }
+ #topBar, #disclaimer {
+   height: 50px;
+   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
+   background: -moz-linear-gradient(top, #fff, #eee);
+ }
+ #container {
+   margin: 25px;
+   width: 750;
+   horizontal-align: center;
+ }
+ #box {
+   width: 800;
+   margin: 0 auto;
+ }
+ #spinel {
+   font-size: 10pt;
+   font-style: italic;
+   text-align: right;
+ }
+ 
+ </style>
+ <script>
+
+function validate_form(){
+	if (document.getElementById('check_1').checked == true &&
+			document.getElementById('check_2').checked == true &&
+			document.getElementById('check_3').checked == true
+			) {
+		return true;
+	} else {
+		return false;
+	}
+}
+ </script>
+</head>
+<body class="body">
+
+<div id="box">
+<div id="container">
+<div id="topBar">{{ .top }}</div>
+ <span id="left">
+  <div id="loginTitle">{{ .loginTitle }}</div>
+  <form action="/_spinel_auth" method="post" >
+   <input type="hidden" name="url" value="{{ .url }}" />
+   <input type="text" name="username" value="{{ .username }}" placeholder="username" />
+   <input type="password" name="password" value="{{ .password }}" placeholder="password" />
+   <input type="submit" id="submit" value="Login" onclick="return validate_form()" />
+  </form>
+ </span>
+ <span id="right">
+ <p>{{ .url }} is a protected resource. Please login with your ActiveDirectory account to proceed.</p>
+ <p>
+  <span id="safety">Complete the Secure Login Checklist:</span>
+  <ul>
+    <li><input id="check_1" type="checkbox" /> Your browser does not show any security warnings</li>
+    <li><input id="check_2" type="checkbox" /> The icon to the left of your address bar shows a locked padlock</li>
+    <li><input id="check_3" type="checkbox" /> The domain name in your address bar is <b>exactly</b> the domain you expect to see. It is spelled correctly and does not contain any sne@ky ch@ract3rs.
+  </ul>
+ </span>
+<div id="disclaimer">
+{{ .disclaimer }}
+</div>
+</div>
+<div id="spinel">Powered by <a href="https://github.com/pgpin/spinel">Spinel</a></div>
+</div>
+</body>
+</html>
+

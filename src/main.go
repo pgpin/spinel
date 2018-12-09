@@ -55,7 +55,7 @@ func main() {
 		//
 		cookie, err := c.Cookie("spinel_token")
 		if err != nil {
-			c.AbortWithStatus(402)
+			c.AbortWithStatus(401)
 			return
 		}
 		json.Unmarshal([]byte(cookie), &token)
@@ -66,13 +66,13 @@ func main() {
 		//
 		if token.Validate(config.Secret) {
 			if time.Now().Unix() > token.Expires {
-				c.AbortWithStatus(403)
+				c.AbortWithStatus(401)
 			} else {
 				c.AbortWithStatus(200)
 			}
 			return
 		}else{
-			c.AbortWithStatus(404)
+			c.AbortWithStatus(401)
 		}
 
 		//
@@ -83,7 +83,7 @@ func main() {
 	})
 	r.LoadHTMLGlob("tmpl/*")
 	r.GET("/_spinel_login", func(c *gin.Context) {
-		c.HTML(200, "login.tmpl", gin.H{"url": c.Query("url")})
+		c.HTML(200, "login.tmpl", gin.H{"url": c.Query("url"), "loginTitle": config.Html.LoginTitle})
 	})
 	r.POST("/_spinel_auth", func(c *gin.Context) {
 		var login LoginPost
@@ -96,7 +96,7 @@ func main() {
 			if ad.Authenticate(login.Username, login.Password) {
 				token := spinel.NewToken(config.Secret, "*", time.Now().Unix() + 60*60*4)
 				c.SetCookie("spinel_token", token.AsJsonString(), 60*60*4, "/", "", false, false)
-				c.AbortWithStatus(200)
+				c.Redirect(301, login.Url)
 			} else {
 				// failed to authenticate
 				c.AbortWithStatus(401)
