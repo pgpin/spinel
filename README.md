@@ -32,8 +32,6 @@ Start the service with
 
 ### Example spinel.yaml
 
-This example configuration file
-
     secret: foobar
     expires: 24
     ad:
@@ -53,7 +51,8 @@ This example configuration file
 
     server{
       server_name mysecureservice.com;
-      listen 80;
+      listen 443;
+      # [...] ssl options 
       location /_spinel_auth {
         proxy_pass              http://unix:/tmp/spinel.sock:/_spinel_auth;
       }
