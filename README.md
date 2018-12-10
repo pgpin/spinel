@@ -33,6 +33,7 @@ Start the service with
 ### Example spinel.yaml
 
 This example configuration file
+
     secret: foobar
     expires: 24
     ad:
