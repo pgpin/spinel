@@ -1,4 +1,5 @@
 secret: GFE7py2bavDyMvtgOGR/Jm4H3BcoxSDcboNRgZ3i8NI= 
+expires: 24
 listen: localhost:9999
 ad:
   host: localhost

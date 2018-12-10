@@ -9,14 +9,16 @@ It is very **fast** (typically adding less than 200 microseconds to a request), 
 Beta. This software is not yet rated for production use.
 
 ## Installation
-Download the single binary file from the release page <link>. It is recommended to run this daemon on the same server as your Nginx daemon to ensure that network health does not add latency to the authentication however it can be run anywhere that is accessible to your Nginx daemon.
+Download the single binary file from the release page <link>.
 
     ./spinel -config=/path/to/spinel.yaml
 
 ## Configuration
 |name| description|
 |---|---|
-|listen|IP:port to bind to|
+|debug|enable debug logging|
+|socket|unix socket file to bind|
+|expire|Number of hours to consider a token valid|
 |secret|a server secret to use in the bearer token checksum|
 |ad.host|the hostname of the ldap server|
 |ad.port|the port of the ldap server|

@@ -15,7 +15,7 @@ type LoginPost struct {
 }
 
 func main() {
-	configFile := flag.String("file", "example-config.yaml", "configuration file location")
+	configFile := flag.String("file", "/etc/spinel.yaml", "configuration file location")
 	flag.Parse()
 	yamlstr, err := ioutil.ReadFile(*configFile)
 	if err != nil {
@@ -24,17 +24,15 @@ func main() {
 
 	config, _ := spinel.ParseYamlConfiguration(&yamlstr)
 	cidrs := spinel.CidrsParse(config.Cidrs)
-
-	throttle := &throttle.Throttle{PeriodicityMs: config.Ad.MaxRequestsPerSecond / 10, Limit: 10}
+	throttle := &throttle.Throttle{PeriodicityMs: 1000, Limit: config.Ad.MaxRequestsPerSecond}
 	ad := spinel.NewActiveDirectoryConnection(config.Ad.Host, config.Ad.Port, config.Ad.Dn)
 
+	if config.Debug != true {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.Default()
 	r.Use(gin.Recovery())
-	//	gin.DisableConsoleColor()
-	//	f, _ := os.Create("spinel.log")
-	//	gin.DefaultWriter = io.MultiWriter(f)
 
-	//
 	// _spinel_auth_check is a route that gets called by Nginx
 	// to determine if a request is authenticated. This route should
 	// return no content. If the request is allowed this route should
@@ -46,7 +44,7 @@ func main() {
 		//
 		// allow request if client ip is in configured whitelists
 		//
-		if spinel.CidrsContains(&cidrs, c.ClientIP()) {
+		if spinel.CidrsContains(&cidrs, c.GetHeader("X-Original-IP")) {
 			c.AbortWithStatus(200)
 			return
 		}
@@ -71,7 +69,7 @@ func main() {
 				c.AbortWithStatus(200)
 			}
 			return
-		}else{
+		} else {
 			c.AbortWithStatus(401)
 		}
 
@@ -81,7 +79,7 @@ func main() {
 		c.AbortWithStatus(401)
 		return
 	})
-	r.LoadHTMLGlob("tmpl/*")
+	r.LoadHTMLGlob(config.Html.Templates + "/*")
 	r.GET("/_spinel_login", func(c *gin.Context) {
 		c.HTML(200, "login.tmpl", gin.H{"url": c.Query("url"), "loginTitle": config.Html.LoginTitle})
 	})
@@ -94,8 +92,8 @@ func main() {
 		}
 		throttle.Invoke(func() {
 			if ad.Authenticate(login.Username, login.Password) {
-				token := spinel.NewToken(config.Secret, "*", time.Now().Unix() + 60*60*4)
-				c.SetCookie("spinel_token", token.AsJsonString(), 60*60*4, "/", "", false, false)
+				token := spinel.NewToken(config.Secret, "*", time.Now().Unix()+60*60*config.Expires)
+				c.SetCookie("spinel_token", token.AsJsonString(), 60*60*int(config.Expires), "/", "", false, false)
 				c.Redirect(301, login.Url)
 			} else {
 				// failed to authenticate
@@ -103,6 +101,5 @@ func main() {
 			}
 		})
 	})
-	r.Static("/_spinel_assets", "./assets")
-	r.Run(config.Listen)
+	r.RunUnix(config.Socket)
 }
