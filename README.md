@@ -41,7 +41,7 @@ Start the service with
     cidrs:
       - 10.0.0.0/8
     html:
-      logintitle: Login with LSR/GMI ActiveDirectory account 
+      logintitle: Login with your ActiveDirectory account 
 
 ### Example nginx configuration
 
